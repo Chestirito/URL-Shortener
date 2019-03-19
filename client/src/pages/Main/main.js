@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {Grid, Paper, TextField, Button} from '@material-ui/core';
 //import CssBaseline from '@material-ui/core/CssBaseline';
 import "./main.css";
+import API from "../../API/api";
 
 class Main extends Component{
 
@@ -18,6 +19,11 @@ class Main extends Component{
             originalUrl: this.state.inputUrl
           };
         console.log(userInput);
+        API.find(userInput)
+            .then(res => {
+                console.log(res.data)
+          })
+          .catch(err => console.log(err));
     }
 
     render(){

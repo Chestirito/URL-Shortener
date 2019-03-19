@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
+  app.use(express.static("../client/build"));
 }
 
 // Add routes, both API and view
@@ -18,14 +18,13 @@ app.use("/api", apiRoutes);
 
 var syncOptions = { force: false };
 
-// If running a test, set syncOptions.force to true
-// clearing the `testdb`
+
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;
 }
 
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, './client/build/index.html'), function(err) {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'), function(err) {
     if (err) {
       res.status(500).send(err)
     }

@@ -2,12 +2,18 @@ var db = require("../../models");
 
 module.exports = function(app) {
   // Get all examples
-  app.get("/", function(req, res) {
-    db.urls.findAll({
-      attributes: ['originalUrl','shortCode', 'requested', 'submitted']
-    }).then(function(results) {
-      res.json(results);
-    });
+  app.post("/find", function(req, res) {
+    db.urls.findOne({
+      where:{
+        originalUrl : req.body.originalUrl
+      } 
+    }).then(function(result) {
+          
+          res.json(result);
+        })
+        .catch(function(err) {
+          res.json(err);
+        });
   });
   
 };

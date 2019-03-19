@@ -9,6 +9,7 @@ module.exports = function(Sequelize, DataTypes) {
       originalUrl: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
             notNull: {
               msg: 'Null url'
@@ -24,6 +25,7 @@ module.exports = function(Sequelize, DataTypes) {
       shortCode: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
             notNull: {
               msg: 'No Shortcode generated'
