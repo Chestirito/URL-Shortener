@@ -7,21 +7,59 @@ import API from "../../API/api";
 class Main extends Component{
 
     state ={
-        inputUrl: ''
+        inputUrl: '',
+        shortUrl: ''
+    }
+
+    componentDidMount(){
+        this.isShortened();
+    }
+
+    isShortened = () =>{
+        let url = window.location.href.split("/")[3];
+        //let findCode = {};
+        let findCode = {shortCode: url};
+        
+        console.log(findCode);
+        if(url !== ""){
+            API.findShort(findCode)
+                .then(res => {
+                    if(res.data){
+                    //console.log(res);
+                    window.location.assign("http://"+res.data.originalUrl);
+                    }
+                    else{
+                        console.log("Page Not Found");
+                    }
+            })
+            .catch(err => console.log(err));
+        }
     }
 
     handleChange = inputUrl => event => {
         this.setState({ [inputUrl]: event.target.value });
     };
 
+    generateRandomCode = (length) =>{
+        const random = Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+        console.log(random);
+        return random;
+    }
+
     handleSubmit = () =>{
-        const userInput = {
-            originalUrl: this.state.inputUrl
-          };
-        console.log(userInput);
-        API.find(userInput)
+        let storeInfo = {
+            originalUrl: this.state.inputUrl,
+            shortCode: this.generateRandomCode(4)
+        };
+        //console.log(userInput);
+        API.findLong(storeInfo)
             .then(res => {
-                console.log(res.data)
+                if(res.data){
+                    console.log(res.data);
+                    this.setState({
+                        shortUrl: window.location.href+res.data.shortCode
+                    })
+                }
           })
           .catch(err => console.log(err));
     }
@@ -63,6 +101,7 @@ class Main extends Component{
                                 label="Shortened URL"
                                 placeholder="Short URL"
                                 className="inputField"
+                                value={this.state.shortUrl}
                                 margin="normal"
                                 disabled={true}
                                 InputLabelProps={{

@@ -1,7 +1,13 @@
 import axios from "axios"; 
 
 export default {
-    find: (urls) =>{
-        return axios.post("api/urls/find", urls);
+    findLong: (urls) =>{
+        return axios.post("api/urls/findLong", urls);
+    },
+    findShort: (urls) =>{
+        return axios.post("api/urls/findShort", urls)
+    },
+    findOrCreate: (urls) =>{
+        return axios.post("api/urls/submit", urls);
     }
 }

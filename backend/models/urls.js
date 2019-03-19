@@ -1,5 +1,5 @@
 module.exports = function(Sequelize, DataTypes) {
-    var User = Sequelize.define("URLS", {
+    var Urls = Sequelize.define("Urls", {
       // Giving the Author model a name of type STRING
       id: {
         type: DataTypes.INTEGER,
@@ -9,7 +9,7 @@ module.exports = function(Sequelize, DataTypes) {
       originalUrl: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'compositeIndex',
         validate: {
             notNull: {
               msg: 'Null url'
@@ -25,7 +25,7 @@ module.exports = function(Sequelize, DataTypes) {
       shortCode: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'compositeIndex2',
         validate: {
             notNull: {
               msg: 'No Shortcode generated'
@@ -50,6 +50,6 @@ module.exports = function(Sequelize, DataTypes) {
     timestamps: false
     });
   
-    return User;
+    return Urls;
   };
   
