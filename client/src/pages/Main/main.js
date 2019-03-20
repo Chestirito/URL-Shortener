@@ -9,7 +9,8 @@ class Main extends Component{
     state ={
         inputUrl: '',
         shortUrl: '',
-        item: []
+        topReq: [],
+        topSub: []
     }
 
     componentDidMount(){
@@ -27,11 +28,11 @@ class Main extends Component{
             API.findShort(findCode)
                 .then(res => {
                     if(res.data){
-                        console.log(res.data);
                         res.data.requested +=1;
                         API.updateSubmitted(res.data)
                         .then(res2=>{
                             console.log(res2);
+                            this.setupRanking();
                         })
                         window.location.assign("http://"+res.data.originalUrl);
                     }
@@ -43,27 +44,44 @@ class Main extends Component{
         }
     }
 
-    setupRanking(){
-        this.getTop("requested");
-        this.getTop("submitted");
-    }
-
-    getTop(columnName){
-        let searchColumn = {column: columnName};
-        let items = []
-        API.findAll(searchColumn)
-        .then(res => {
-            res.data.forEach((arrayItem) => {
-                //console.log(arrayItem);
+    setupRanking = () => {
+        this.getTop("requested").then(res=>{
+            console.log(res);
+            let items = []
+            res.forEach((arrayItem) => {
                 items.push({url: arrayItem.originalUrl, number: arrayItem.requested});
             });
-            //console.log(items);
             this.setState({
-                item: items
+                topReq: items
             })
-            console.log(this.state.item);
+        });
+        this.getTop("submitted").then(res=>{
+            let items = []
+            res.forEach((arrayItem) => {
+                items.push({url: arrayItem.originalUrl, number: arrayItem.submitted});
+            });
+            this.setState({
+                topSub: items
+            })
+        });;
+    }
+
+    getTop = (columnName) => {
+        return new Promise((resolve, reject)=>{
+            let searchColumn = {column: columnName};
+            API.findAll(searchColumn)
+            .then(res => {
+                // res.data.forEach((arrayItem) => {
+                //     items.push({url: arrayItem.originalUrl, number: arrayItem.requested});
+                // });
+                // this.setState({
+                //     item: items
+                // })
+                resolve(res.data);
+            })
         })
     }
+    
 
     handleChange = inputUrl => event => {
         this.setState({ [inputUrl]: event.target.value });
@@ -80,7 +98,7 @@ class Main extends Component{
             originalUrl: this.state.inputUrl,
             shortCode: this.generateRandomCode(4)
         };
-        //console.log(userInput);
+    
         API.findLong(storeInfo)
             .then(res => {
                 if(res.data){
@@ -92,6 +110,7 @@ class Main extends Component{
                     API.updateSubmitted(res.data)
                         .then(res2=>{
                             console.log(res2.data);
+                            this.setupRanking();
                         })
                 }else{
                     API.create(storeInfo)
@@ -140,27 +159,28 @@ class Main extends Component{
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className="inputBox">
-                            <TextField
-                                id="input-url"
-                                label="Shortened URL"
-                                placeholder="Short URL"
-                                className="inputField"
-                                value={this.state.shortUrl}
-                                margin="normal"
-                                disabled={true}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                variant="outlined"
-                            />
+                            <Typography className="shortBox">
+                                {this.state.shortUrl !== "" ? this.state.shortUrl : "Shortened Url"}
+                            </Typography>
                         </Paper>
                     </Grid>
-                    {this.state.item.length ? (
+                    {this.state.topSub.length ? (
                         <Grid item xs={6}>
                             <RankBox
                                 title="Top Submitted Links"
-                                item={this.state.item}
+                                item={this.state.topSub}
+                            />
+                        </Grid>
+                    ) :(
+                        <Grid item xs={6}>
+                            <Typography>No Ranking</Typography>
+                        </Grid>
+                    )}
+                    {this.state.topReq.length ? (
+                        <Grid item xs={6}>
+                            <RankBox
+                                title="Top Requested Links"
+                                item={this.state.topReq}
                             />
                         </Grid>
                     ) :(
