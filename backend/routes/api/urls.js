@@ -54,7 +54,18 @@ router.route("/submit2")
         res.json(err);
       });
 });
-
+router.route("/updateSub")
+.post((req, res)=>{
+  db.Urls.update(req.body,{where:{
+    originalUrl: req.body.originalUrl
+  }})
+  .then((result)=>{
+    res.json(result);
+  })
+  .catch((err)=>{
+    res.json(err);
+  })
+});
   
 
 module.exports = router;

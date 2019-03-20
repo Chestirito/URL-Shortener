@@ -25,8 +25,13 @@ class Main extends Component{
             API.findShort(findCode)
                 .then(res => {
                     if(res.data){
-                    //console.log(res);
-                    window.location.assign("http://"+res.data.originalUrl);
+                        console.log(res.data);
+                        res.data.requested +=1;
+                        API.updateSubmitted(res.data)
+                        .then(res2=>{
+                            console.log(res2);
+                        })
+                        window.location.assign("http://"+res.data.originalUrl);
                     }
                     else{
                         console.log("Page Not Found");
@@ -59,6 +64,11 @@ class Main extends Component{
                     this.setState({
                         shortUrl: window.location.href+res.data.shortCode
                     })
+                    res.data.submitted += 1;
+                    API.updateSubmitted(res.data)
+                        .then(res2=>{
+                            console.log(res2.data);
+                        })
                 }else{
                     API.create(storeInfo)
                         .then(res2 =>{

@@ -5,12 +5,18 @@ export default {
         return axios.post("api/urls/findLong", urls);
     },
     findOrCreate: (urls) =>{
-        return axios.post("api/urls/submit", urls)
+        return axios.post("api/urls/submit", urls);
     },
     findShort: (urls) =>{
-        return axios.post("api/urls/findShort", urls)
+        return axios.post("api/urls/findShort", urls);
     },
     create: (urls) =>{
         return axios.post("api/urls/submit2", urls);
+    },
+    updateRequested: (urls) =>{
+        return axios.post("api/urls/updateReq", urls);
+    },
+    updateSubmitted: (urls) =>{
+        return axios.post("api/urls/updateSub", urls)
     }
 }
