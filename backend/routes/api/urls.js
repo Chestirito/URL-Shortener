@@ -66,6 +66,14 @@ router.route("/updateSub")
     res.json(err);
   })
 });
+router.route("/findAll")
+.post((req, res)=>{
+  console.log(req.body);
+  db.Urls.findAll({order: [[req.body.column, "DESC"]]})
+  .then((result)=>{
+    res.json(result);
+  })
+})
   
 
 module.exports = router;

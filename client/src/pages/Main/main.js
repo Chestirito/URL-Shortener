@@ -1,18 +1,20 @@
 import React, { Component } from "react";
-import {Grid, Paper, TextField, Button} from '@material-ui/core';
+import {Grid, Paper, TextField, Button, Typography} from '@material-ui/core';
 //import CssBaseline from '@material-ui/core/CssBaseline';
 import "./main.css";
 import API from "../../API/api";
-
+import RankBox from "../../components/rankBox";
 class Main extends Component{
 
     state ={
         inputUrl: '',
-        shortUrl: ''
+        shortUrl: '',
+        item: []
     }
 
     componentDidMount(){
         this.isShortened();
+        this.setupRanking();
     }
 
     isShortened = () =>{
@@ -39,6 +41,28 @@ class Main extends Component{
             })
             .catch(err => console.log(err));
         }
+    }
+
+    setupRanking(){
+        this.getTop("requested");
+        this.getTop("submitted");
+    }
+
+    getTop(columnName){
+        let searchColumn = {column: columnName};
+        let items = []
+        API.findAll(searchColumn)
+        .then(res => {
+            res.data.forEach((arrayItem) => {
+                //console.log(arrayItem);
+                items.push({url: arrayItem.originalUrl, number: arrayItem.requested});
+            });
+            //console.log(items);
+            this.setState({
+                item: items
+            })
+            console.log(this.state.item);
+        })
     }
 
     handleChange = inputUrl => event => {
@@ -82,6 +106,11 @@ class Main extends Component{
     render(){
         return(
             <div className='wrapper'>
+                    
+                <Typography component="h1" variant="h2" align="center" color="textPrimary" className="header" gutterBottom>
+                    URL Shortener
+                </Typography>
+                    
                 <Grid container spacing={24}>
                     <Grid item xs={12} md={12}>
                         <Paper className="inputBox">
@@ -127,6 +156,18 @@ class Main extends Component{
                             />
                         </Paper>
                     </Grid>
+                    {this.state.item.length ? (
+                        <Grid item xs={6}>
+                            <RankBox
+                                title="Top Requested Links"
+                                item={this.state.item}
+                            />
+                        </Grid>
+                    ) :(
+                        <Grid item xs={6}>
+                            <Typography>No Ranking</Typography>
+                        </Grid>
+                    )}
                 </Grid>
             </div>
             

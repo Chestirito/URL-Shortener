@@ -17,6 +17,9 @@ export default {
         return axios.post("api/urls/updateReq", urls);
     },
     updateSubmitted: (urls) =>{
-        return axios.post("api/urls/updateSub", urls)
+        return axios.post("api/urls/updateSub", urls);
+    },
+    findAll: (column)=>{
+        return axios.post("api/urls/findAll", column);
     }
 }
