@@ -95,14 +95,14 @@ class Main extends Component{
 
     handleSubmit = () =>{
         let storeInfo = {
-            originalUrl: this.state.inputUrl,
+            originalUrl: this.state.inputUrl.replace(/(^\w+:|^)\/\//, ''),
             shortCode: this.generateRandomCode(4)
         };
     
         API.findLong(storeInfo)
             .then(res => {
                 if(res.data){
-                    console.log(res.data);
+                    //console.log(res.data);
                     this.setState({
                         shortUrl: window.location.href+res.data.shortCode
                     })
@@ -116,6 +116,9 @@ class Main extends Component{
                     API.create(storeInfo)
                         .then(res2 =>{
                             console.log(res2.data);
+                            this.setState({
+                                shortUrl: window.location.href+res2.data.shortCode
+                            })
                         })
                 }
           })
