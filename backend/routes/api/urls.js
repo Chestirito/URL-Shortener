@@ -44,6 +44,17 @@ router.route("/submit")
       });
 });
 
+router.route("/submit2")
+.post((req, res)=>{
+  db.Urls.create(req.body)
+  .then((result)=> {
+        res.json(result);
+      })
+      .catch((err)=> {
+        res.json(err);
+      });
+});
+
   
 
 module.exports = router;

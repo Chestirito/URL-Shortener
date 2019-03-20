@@ -42,7 +42,7 @@ class Main extends Component{
 
     generateRandomCode = (length) =>{
         const random = Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-        console.log(random);
+        //console.log(random);
         return random;
     }
 
@@ -59,6 +59,11 @@ class Main extends Component{
                     this.setState({
                         shortUrl: window.location.href+res.data.shortCode
                     })
+                }else{
+                    API.create(storeInfo)
+                        .then(res2 =>{
+                            console.log(res2.data);
+                        })
                 }
           })
           .catch(err => console.log(err));
