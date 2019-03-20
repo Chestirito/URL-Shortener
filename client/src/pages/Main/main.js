@@ -159,7 +159,7 @@ class Main extends Component{
                     {this.state.item.length ? (
                         <Grid item xs={6}>
                             <RankBox
-                                title="Top Requested Links"
+                                title="Top Submitted Links"
                                 item={this.state.item}
                             />
                         </Grid>
